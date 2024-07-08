@@ -3,7 +3,7 @@
 
 # 🔫 DeepState Map Data
 
-The `occupied-areas-ua.geojson` contains a Multipolygon representing the russian-occupied territory of Ukraine.
+The `deepstatemap_data_<update_date>.geojson` in `data` folder contains a Multipolygon representing the russian-occupied territory of Ukraine.
 
 Updates daily, at 05:00.
 
