@@ -9,6 +9,6 @@ Updates daily, at 05:00.
 
 ## To Do
 
-    - Write a simple script using notebook code.
-    - ~Set up Github Actions for daily updates.~
-    - Something I have not yet thought of. 
+- ~~Write a simple script using notebook code.~~ ✅
+- ~~Set up Github Actions for daily updates.~~ ✅
+- Something I have not yet thought of.
