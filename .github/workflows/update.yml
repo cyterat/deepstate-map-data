@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: install geopandas
+      - name: install mudules
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
