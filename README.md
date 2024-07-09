@@ -3,9 +3,13 @@
 
 # 🔫 DeepState Map Data
 
-The `deepstatemap_data_<update_date>.geojson` in `data` folder contains a Multipolygon representing the russian-occupied territory of Ukraine.
+The GeoJSON, in `data` folder, contains a single up-to-date Multipolygon, representing the russian-occupied territory of Ukraine.
 
-Updates daily, at 05:00.
+**Name format:**
+`deepstatemap_data_<update_date>.geojson`
+
+**Frequency of updates:**
+Daily, at 03:00 UTC.
 
 ## To Do
 
