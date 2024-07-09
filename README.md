@@ -3,7 +3,7 @@
 
 # 🔫 DeepState Map Data
 
-The GeoJSON, in `data` folder, contains a single up-to-date Multipolygon, representing the russian-occupied territory of Ukraine.
+The GeoJSON, in `data` folder, contains up-to-date Multipolygons, representing the russian-occupied territory of Ukraine.
 
 **Name format:**
 `deepstatemap_data_<update_date>.geojson`
