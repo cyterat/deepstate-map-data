@@ -15,4 +15,5 @@ Daily, at 03:00 UTC.
 
 - ~~Write a simple script using notebook code.~~ ✅
 - ~~Set up Github Actions for daily updates.~~ ✅
-- Something I have not yet thought of.
+- Create a single compressed GeoJSON consolidating all data so far... 🔥
+- Write another script for Github Actions for daily updates of the above mentioned GeoJSON... 🔥
