@@ -34,8 +34,6 @@ jobs:
           git config --local user.name "GitHub Action"
           git add -A
           git diff-index --quiet HEAD || (git commit -a -m "[update] Update GeoJSON data" --allow-empty)
-      - name: push changes
-        uses: ad-m/github-push-action@v0.8.0
-        with:
+          git push
+        env:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
