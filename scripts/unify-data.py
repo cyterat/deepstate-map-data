@@ -4,7 +4,6 @@ import os
 import sys
 import logging
 from datetime import datetime
-# from datetime import timedelta # for potential script re-runs (debug)
 import gzip
 from io import StringIO
 
@@ -12,7 +11,6 @@ from io import StringIO
 os.environ['GDAL_DATA'] = os.path.join(f'{os.sep}'.join(sys.executable.split(os.sep)[:-1]), 'Library', 'share', 'gdal')
 
 import geopandas as gpd
-from fiona._err import CPLE_OpenFailedError
 
 
 # Set up logging
@@ -21,7 +19,6 @@ logger = logging.getLogger(__name__)
 
 # Configuration
 CURRENT_DATE = datetime.now()
-# CURRENT_DATE = datetime.now() - timedelta(days=3) # for potential script re-runs (debug)
 CRS = "EPSG:4326"
 
 SOURCE_FILE = f"deepstatemap_data_{CURRENT_DATE.strftime('%Y%m%d')}.geojson"
@@ -87,13 +84,9 @@ def import_source_geojson():
         source_gdf = gpd.GeoDataFrame(new_rows, geometry="geometry", crs=CRS)
         logger.info(f"Successfully imported {source_gdf.shape[0]} feature(-s) into GeoDataFrame. Update for {CURRENT_DATE.strftime('%Y-%m-%d')}.")
         return source_gdf
-    
-    except CPLE_OpenFailedError as f:
-        logger.error(f"Exiting because expected list with dictionary, but received an unsupported file format: {f}")
-        sys.exit(1)
 
     except Exception as e:
-        logger.error(f"Exiting due to error while loading dictionary into GeoDataFrame: {e}")
+        logger.error(f"Exiting due to an error while loading dictionary into GeoDataFrame: {e}")
         sys.exit(1)
 
 
@@ -105,14 +98,27 @@ def import_target_geojson():
         geojson_str = f.read()
         
     try:
-        # Read GeoJSON string into GeoDataFrame
-        target_gdf = gpd.read_file(StringIO(geojson_str), crs=CRS)
-        logger.info(f"Successfully imported target GeoJSON. Last update: {target_gdf.iloc[-1,1]}. Current GeoDataFrame shape: {target_gdf.shape}.")
-        return target_gdf.drop(columns="id")
-    
+        # Use 'pyogrio' engine to read geojson (improved performance)
+        target_gdf = gpd.read_file(StringIO(geojson_str), engine="pyogrio")
+
+    except (ValueError, NotImplementedError) as e:
+        logger.warning("Could not use 'pyogrio' engine, switching to 'fiona'...")
+        # Use 'fiona' engine to read geojson (more robust)
+        target_gdf = gpd.read_file(StringIO(geojson_str), engine="fiona")
+
     except Exception as e:
-        logger.error(f"Exiting due to error while loading GeoJSON string into GeoDataFrame: {e}")
+        logger.error("Exiting due to error while importing source GeoJSON: {e}")
         sys.exit(1)
+
+    logger.info(f"Successfully imported target GeoJSON. Last update: {target_gdf.tail(1)["date"]}. Current GeoDataFrame shape: {target_gdf.shape}.")
+
+    # Avoid formatting date as datetime 
+    target_gdf['date'] = target_gdf['date'].dt.strftime('%Y-%m-%d')
+
+    # Drop id column
+    target_gdf = target_gdf.drop(columns="id")
+
+    return target_gdf
 
 
 def unify_datasets(existing_dataset, new_row):
