@@ -127,7 +127,7 @@ def unify_datasets(existing_dataset, new_row):
     # Check if 'last' date values match in both GeoDataFrames 
     if new_row.iloc[-1].loc["date"] in existing_dataset["date"].values:
         logger.warning(f"Exiting because target dataset already contains the {CURRENT_DATE.strftime('%Y-%m-%d')} update.")
-        sys.exit(1)  
+        sys.exit(0)  
     else:
         logger.info("Current update does not yet exist in the target dataset.")
         try:
