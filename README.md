@@ -3,7 +3,7 @@
 
 # 🔫 DeepState Map Data
 
-The GeoJSON, in `data` folder, contains up-to-date Multipolygons, representing the russian-occupied territory of Ukraine.
+Every GeoJSON, in `data` folder, contains up-to-date Multipolygon, representing the russian-occupied territory of Ukraine.
 
 **Name format:**
 `deepstatemap_data_<update_date>.geojson`
@@ -11,19 +11,24 @@ The GeoJSON, in `data` folder, contains up-to-date Multipolygons, representing t
 **Frequency of updates:**
 Daily, at 03:00 UTC.
 
-### To Do
+    To Do:
+    - Write a simple script using notebook code. ✅
+    - Set up Github Actions for daily updates. ✅
+    - Create a single compressed GeoJSON consolidating all data so far. ✅
+    - Write another script for Github Actions for daily updates of the above mentioned GeoJSON... 🔥
 
-- ~~Write a simple script using notebook code.~~ ✅
-- ~~Set up Github Actions for daily updates.~~ ✅
-- Create a single compressed GeoJSON consolidating all data so far... 🔥
-- Write another script for Github Actions for daily updates of the above mentioned GeoJSON... 🔥
 
 ## 📚 `deepstate-map-data.geojson.gz` -- Unified, Compressed Dataset
 
-This compressed file contains all historical geomtries alongside their respective update dates, currently stored in the `data` folder.
+🟡 __Important:__ All files within the `data` folder will remain untouched, and will continue to be daily updated.
+
+The new compressed file contains all historical geomtries alongside their respective update dates, currently stored in the `data` folder.
 
 **Name format:**
 `deepstate-map-data.geojson.gz`
+
+**Frequency of updates:**
+Daily, at around 03:00 UTC.
 
 Sample Data Structure:
 
@@ -32,7 +37,6 @@ Sample Data Structure:
 | 0   | 2024-07-08 | MULTIPOLYGON (((35.20146 45.52334, 35.31126 45... |   |   |
 | 1   | 2024-07-09 | MULTIPOLYGON (((35.20146 45.52334, 35.31126 45... |   |   |
 | ... | ...        | ...                                               |   |   |
-|     |            |                                                   |   |   |
 
 \* `date` represents date of update.
 
@@ -78,11 +82,11 @@ gunzip -c deepstate-map-data.geojson.gz > deepstate-map-data.geojson
     2. Select "Extract Here"
     3. The file will decompress to `deepstate-map-data.geojson`
 
-### __Performance Warning__
+### ⚠️ __Performance Warning__
 
  Since many features share locations and vary only slightly day to day, rendering all records at once (~400 as of 2025) using tools like __geojson.io__, can cause severe lag.
 
 Try to filter `date` or use sample subsets before using less powerful rendering tools, if you experienced similar performance issues in the past.
 
+_Below: example of multiple layers stacking when loading full dataset without filters_
 <img width="600" src="assets/geojson-rendering-warning.png"/><br>
-_Above: example of multiple layers stacking when loading full dataset without filters_
