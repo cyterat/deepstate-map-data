@@ -33,7 +33,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "[update] Update GeoJSON data - $(date +'%Y-%m-%d')" --allow-empty)
+          git diff-index --quiet HEAD || (git commit -a -m "[update] Update GeoJSON data" --allow-empty)
           git push
         env:
           github_token: ${{ secrets.GITHUB_TOKEN }}
