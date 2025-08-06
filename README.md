@@ -54,7 +54,7 @@ import gzip
 with gzip.open("deepstate-map-data.geojson.gz", "rt", encoding="utf-8") as f:
     geojson_str = f.read()
 
-gdf = gpd.read_file(StringIO(geojson_str), crs="EPSG:4326")
+gdf = gpd.read_file(StringIO(geojson_str))
 
 print(gdf.head())
 ```
@@ -65,7 +65,7 @@ __Python (if uncompressed)__
 import geopandas as gpd
 
 file = "deepstate-map-data.geojson"
-gdf = gpd.read_file(file, crs="EPSG:4326")
+gdf = gpd.read_file(file)
 
 print(gdf.head())
 ```
