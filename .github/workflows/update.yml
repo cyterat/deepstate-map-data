@@ -6,7 +6,7 @@ on:
     - cron: '0 3 * * *'
 
 jobs:
-  download-json:
+  download-geojson:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo content
@@ -26,16 +26,49 @@ jobs:
           pip install -r requirements.txt
       
       - name: execute python script
-        run: python script.py
+        run: python scripts/download-geojson.py
 
-      - name: commit files
+      - name: commit and push files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
           git diff-index --quiet HEAD || (git commit -a -m "[update] Update GeoJSON data" --allow-empty)
-      - name: push changes
-        uses: ad-m/github-push-action@v0.8.0
-        with:
+          git push
+        env:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+
+  unify-data:
+    runs-on: ubuntu-latest
+    needs: download-geojson
+    if: success()
+
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v4.1.7
+
+      - name: pull changes from remote
+        run: git pull origin
+
+      - name: setup python
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: '3.12'
+
+      - name: install mudules
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: execute python script
+        run: python scripts/unify-data.py
+
+      - name: commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add deepstate-map-data.geojson.gz
+          git diff-index --quiet HEAD || (git commit -m "[update] Update GeoJSON data - $(date +'%Y-%m-%d')" --allow-empty)
+          git push
+        env:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
