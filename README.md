@@ -15,12 +15,12 @@ Daily, at 03:00 UTC.
     - Write a simple script using notebook code. ✅
     - Set up Github Actions for daily updates. ✅
     - Create a single compressed GeoJSON consolidating all data so far. ✅
-    - Write another script for Github Actions for daily updates of the above mentioned GeoJSON... 🔥
+    - Write another script for Github Actions for daily updates of the above mentioned GeoJSON. ✅
 
 
 ## 📚 `deepstate-map-data.geojson.gz` -- Unified, Compressed Dataset
 
-🟡 __Important:__ All files within the `data` folder will remain untouched, and will continue to be daily updated.
+🟡 __Important:__ All files within the `data` folder remain untouched, and continue to be daily updated.
 
 The new compressed file contains all historical geomtries alongside their respective update dates, currently stored in the `data` folder.
 
@@ -30,7 +30,7 @@ The new compressed file contains all historical geomtries alongside their respec
 **Frequency of updates:**
 Daily, at around 03:00 UTC.
 
-Sample Data Structure:
+_Sample Data Structure:_
 
 | id  | date       | geometry                                          |   |   |
 |-----|------------|---------------------------------------------------|---|---|
@@ -38,13 +38,13 @@ Sample Data Structure:
 | 1   | 2024-07-09 | MULTIPOLYGON (((35.20146 45.52334, 35.31126 45... |   |   |
 | ... | ...        | ...                                               |   |   |
 
-\* `date` represents date of update.
+\* _`date` represents date of update._
 
 ### __Accessing compressed data__
 
 If your application or tool does not support gzip-compressed GeoJSON files, below are several different ways I personally used to access/unzip the data.
 
-#### Python (if compressed)
+__Python (if compressed)__
 
 ```
 import geopandas as gpd
@@ -59,7 +59,7 @@ gdf = gpd.read_file(StringIO(geojson_str), crs="EPSG:4326")
 print(gdf.head())
 ```
 
-#### Python (if uncompressed)
+__Python (if uncompressed)__
 
 ```
 import geopandas as gpd
@@ -70,13 +70,13 @@ gdf = gpd.read_file(file, crs="EPSG:4326")
 print(gdf.head())
 ```
 
-#### Linux Terminal (unzip)
+__Linux Terminal (unzip)__
 
 ```
 gunzip -c deepstate-map-data.geojson.gz > deepstate-map-data.geojson
 ```
 
-#### Windows 7-Zip archiver (unzip)
+__Windows 7-Zip archiver (unzip)__
 
     1. Right-click `deepstate-map-data.geojson.gz`
     2. Select "Extract Here"
