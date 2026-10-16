@@ -90,3 +90,37 @@ Try to filter `date` or use sample subsets before using less powerful rendering 
 
 _Below: example of multiple layers stacking when loading full dataset without filters_
 <img width="600" src="assets/geojson-rendering-warning.png"/><br>
+
+### SQL & PostGIS Optimization (Performance Fix) / Оптимізація SQL та PostGIS
+
+To address the performance warnings regarding rendering and processing large historical GeoJSON datasets, you can import this data into a spatial database like **PostgreSQL with PostGIS**. This offloads the heavy spatial processing from Python/Frontend straight to the database engine using spatial indexes.
+
+Для вирішення проблем із продуктивністю під час обробки та рендерингу великих історичних наборів даних GeoJSON, ви можете імпортувати ці дані в просторову базу даних, таку як **PostgreSQL з PostGIS**. Це переносить важку просторову обробку з Python/Frontend безпосередньо на рушій бази даних за допомогою просторових індексів.
+
+**Database Schema Setup / Налаштування схеми бази даних:**
+```sql
+-- Enable PostGIS extension for spatial data / Увімкнення розширення PostGIS для просторових даних
+CREATE EXTENSION IF NOT EXISTS postgis;
+
+-- Create table for historical occupied territories / Створення таблиці для історичних даних про окуповані території
+CREATE TABLE deepstate_map_data (
+    id SERIAL PRIMARY KEY,
+    datum DATE NOT NULL,
+    geometry GEOMETRY(MultiPolygon, 4326) NOT NULL
+);
+
+-- Spatial index to fix performance lag / Просторовий індекс для усунення затримок продуктивності
+CREATE INDEX idx_deepstate_geometry ON deepstate_map_data USING gist(geometry);
+
+-- B-Tree index for fast date filtering / Індекс B-Tree для швидкої фільтрації за датою
+CREATE INDEX idx_deepstate_datum ON deepstate_map_data(datum);
+```
+
+**Fast Historical Changes Query Example / Приклад швидкого запиту історичних змін:**
+```sql
+-- Calculate the exact territory changes between two dates / Розрахунок точних змін території між двома датами
+SELECT 
+    ST_Difference(t2.geometry, t1.geometry) AS territory_change
+FROM deepstate_map_data t1
+JOIN deepstate_map_data t2 ON t1.datum = '2026-10-09' AND t2.datum = '2026-10-10';
+```
